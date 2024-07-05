@@ -1,0 +1,36 @@
+.results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.results__item {
+    border: 1px solid #fff;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.results__item svg {
+    width: 30px;
+    height: 30px;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+canvas {
+    border: 1px solid white;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1 / 2;
+    border-radius: 8px;
+}
+
