@@ -9,10 +9,10 @@ function Tetris() {
   const [scorePoints, setScorePoints] = useState(0) // кол-во очков
   const [gameOver, setGameOver] = useState(false) // флаг конца игры
 
-  let tetromino = null  // текущая фигура
+  const tetrominoRef = useRef() // текущая фигура
   // const [tetromino, setTetromino] = useState(null)  // текущая фигура
 
-  const [rAF, setRAF] = useState(null) // кадры анимации
+  const rafRef = useRef() // кадры анимации
   let count = 0 // счетчик
 
   const canvasRef = useRef(null)
@@ -80,16 +80,16 @@ function Tetris() {
 
   const placeTetromino = () => {
     // обрабатываем все строки и столбцы в игровом поле
-    for (let row = 0; row < tetromino.matrix.length; row++) {
-      for (let col = 0; col < tetromino.matrix[row].length; col++) {
-        if (tetromino.matrix[row][col]) {
+    for (let row = 0; row < tetrominoRef.current.matrix.length; row++) {
+      for (let col = 0; col < tetrominoRef.current.matrix[row].length; col++) {
+        if (tetrominoRef.current.matrix[row][col]) {
 
           // если край фигуры после установки вылезает за границы поля, то игра закончилась
-          if (tetromino.row + row < 0) {
+          if (tetrominoRef.current.row + row < 0) {
             return setGameOver(true)
           }
           // если всё в порядке, то записываем в массив игрового поля нашу фигуру
-          playField[tetromino.row + row][tetromino.col + col] = tetromino.name
+          playField[tetrominoRef.current.row + row][tetrominoRef.current.col + col] = tetrominoRef.current.name
         }
       }
     }
@@ -113,14 +113,14 @@ function Tetris() {
       }
     }
     // получаем следующую фигуру
-    tetromino = getNextTetromino()
+    tetrominoRef.current = getNextTetromino()
   }
 
   useEffect(() => {
     if (!gameOver) return
 
     // прекращаем всю анимацию игры
-    cancelAnimationFrame(rAF)
+    cancelAnimationFrame(rafRef.current)
     // рисуем чёрный прямоугольник посередине поля
     context.fillStyle = 'black'
     context.globalAlpha = 0.75
@@ -148,7 +148,7 @@ function Tetris() {
     if (!context) return
 
     // начинаем анимацию
-    setRAF(requestAnimationFrame(loop))
+    rafRef.current = requestAnimationFrame(loop)
     // очищаем холст
     context.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -166,64 +166,64 @@ function Tetris() {
     }
 
     // рисуем текущую фигуру
-    if (tetromino) {
+    if (tetrominoRef.current) {
       if (scorePoints < 1000){
         // фигура сдвигается вниз каждые 35 кадров
         if (++count > 35) {
-          tetromino.row++
+          tetrominoRef.current.row++
           count = 0
 
           // если движение закончилось — рисуем фигуру в поле и проверяем, можно ли удалить строки
-          if (!isValidMove(tetromino.matrix, tetromino.row, tetromino.col)) {
-            tetromino.row--
+          if (!isValidMove(tetrominoRef.current.matrix, tetrominoRef.current.row, tetrominoRef.current.col)) {
+            tetrominoRef.current.row--
             placeTetromino()
           }
         }
       } else if (scorePoints >= 1000 && scorePoints < 2500) {
         if (++count > 30) {
-          tetromino.row++
+          tetrominoRef.current.row++
           count = 0;
 
           // если движение закончилось — рисуем фигуру в поле и проверяем, можно ли удалить строки
-          if (!isValidMove(tetromino.matrix, tetromino.row, tetromino.col)) {
-            tetromino.row--
+          if (!isValidMove(tetrominoRef.current.matrix, tetrominoRef.current.row, tetrominoRef.current.col)) {
+            tetrominoRef.current.row--
             placeTetromino()
           }
         }
       } else if ( scorePoints >= 2500) {
         if (++count > 20) {
-          tetromino.row++
+          tetrominoRef.current.row++
           count = 0
 
           // если движение закончилось — рисуем фигуру в поле и проверяем, можно ли удалить строки
-          if (!isValidMove(tetromino.matrix, tetromino.row, tetromino.col)) {
-            tetromino.row--
+          if (!isValidMove(tetrominoRef.current.matrix, tetrominoRef.current.row, tetrominoRef.current.col)) {
+            tetrominoRef.current.row--
             placeTetromino()
           }
         }
       } else {
         if (++count > 15) {
-          tetromino.row++
+          tetrominoRef.current.row++
           count = 0
 
           // если движение закончилось — рисуем фигуру в поле и проверяем, можно ли удалить строки
-          if (!isValidMove(tetromino.matrix, tetromino.row, tetromino.col)) {
-            tetromino.row--
+          if (!isValidMove(tetrominoRef.current.matrix, tetrominoRef.current.row, tetrominoRef.current.col)) {
+            tetrominoRef.current.row--
             placeTetromino()
           }
         }
       }
 
       // не забываем про цвет текущей фигуры
-      context.fillStyle = tetrominoColors[tetromino.name]
+      context.fillStyle = tetrominoColors[tetrominoRef.current.name]
 
       // отрисовываем её
-      for (let row = 0; row < tetromino.matrix.length; row++) {
-        for (let col = 0; col < tetromino.matrix[row].length; col++) {
-          if (tetromino.matrix[row][col]) {
+      for (let row = 0; row < tetrominoRef.current.matrix.length; row++) {
+        for (let col = 0; col < tetrominoRef.current.matrix[row].length; col++) {
+          if (tetrominoRef.current.matrix[row][col]) {
 
             // и снова рисуем на один пиксель меньше
-            context.fillRect((tetromino.col + col) * grid, (tetromino.row + row) * grid, grid-1, grid-1)
+            context.fillRect((tetrominoRef.current.col + col) * grid, (tetrominoRef.current.row + row) * grid, grid-1, grid-1)
           }
         }
       }
@@ -236,17 +236,17 @@ function Tetris() {
     }
   }
 
-  const moveTetrominoRight = (tetromino) => {
+  const moveTetrominoRight = tetromino => {
     const col = tetromino.col + 1
     applyMoveTetromino(tetromino, col)
   }
 
-  const moveTetrominoLeft = (tetromino) => {
+  const moveTetrominoLeft = tetromino => {
     const col = tetromino.col - 1
     applyMoveTetromino(tetromino, col)
   }
 
-  const rotateTetromino = (tetromino) => {
+  const rotateTetromino = tetromino => {
     const matrix = rotateMatrix(tetromino.matrix)
 
     if (isValidMove(matrix, tetromino.row, tetromino.col)) {
@@ -254,8 +254,8 @@ function Tetris() {
     }
   }
 
-  const accelerateTetraminoFall = () => {
-    if (tetromino.row < 1) return
+  const accelerateTetraminoFall = tetromino => {
+    if (tetromino.row < 0) return
 
     while(isValidMove(tetromino.matrix, tetromino.row + 1, tetromino.col)) {
       tetromino.row += 1
@@ -269,17 +269,61 @@ function Tetris() {
 
     // стрелки влево и вправо
     if (e.which === 37 || e.which === 39) {
-      e.which === 37 ? moveTetrominoLeft(tetromino) : moveTetrominoRight(tetromino)
+      e.which === 37 ? moveTetrominoLeft(tetrominoRef.current) : moveTetrominoRight(tetrominoRef.current)
     }
     // стрелка вверх — поворот
     if (e.which === 38) {
-      rotateTetromino(tetromino)
+      rotateTetromino(tetrominoRef.current)
     }
 
     // стрелка вниз — ускорить падение
-    if(e.which === 40) {
-      accelerateTetraminoFall()
+    if (e.which === 40) {
+      accelerateTetraminoFall(tetrominoRef.current)
     }
+  }
+
+  const xTouchStartRef = useRef(null)
+  const yTouchStartRef = useRef(null)
+
+  const handleTouchStart = e => {
+    xTouchStartRef.current = e.touches[0].clientX
+    yTouchStartRef.current = e.touches[0].clientY
+  }
+
+  const handleTouchEnd = e => {
+    const xTouchEnd = e.changedTouches[0].clientX
+    if (xTouchEnd === xTouchStartRef.current) {
+      rotateTetromino(tetrominoRef.current)
+    }
+  }
+
+  const handleTouchMove = e => {
+    if (!xTouchStartRef.current || !yTouchStartRef.current) return
+
+    const xUp = e.touches[0].clientX
+    const yUp = e.touches[0].clientY
+
+    const xDiff = xTouchStartRef.current - xUp
+    const yDiff = yTouchStartRef.current - yUp
+
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+      if ( xDiff > 0 ) {
+        moveTetrominoLeft(tetrominoRef.current)
+      } else {
+        moveTetrominoRight(tetrominoRef.current)
+      }
+    } else {
+      if ( yDiff < 100 ) {
+        accelerateTetraminoFall(tetrominoRef.current)
+      }
+    }
+
+    xTouchStartRef.current = null
+    yTouchStartRef.current = null
+  }
+
+  const reset = () => {
+    window.location.reload()
   }
 
   useEffect(() => {
@@ -287,56 +331,17 @@ function Tetris() {
       setContext(canvas?.getContext('2d'))
     }
 
-    tetromino = getNextTetromino()
-
-    setRAF(requestAnimationFrame(loop))
+    tetrominoRef.current = getNextTetromino()
 
     document.addEventListener('keydown', keyboardEventListener)
 
-    return () => document.removeEventListener('keydown', keyboardEventListener)
-  }, [context])
+    rafRef.current = requestAnimationFrame(loop)
 
-  // const [xDown, setXDown] = useState(null)
-  // const [yDown, setYDown] = useState(null)
-
-  const [xDown, setXDown] = useState(null)
-  const [yDown, setYDown] = useState(null)
-
-  const handleTouchStart = e => {
-    setXDown(e.touches[0].clientX)
-    setYDown(e.touches[0].clientY)
-  }
-
-  const handleTouchEnd = e => {
-
-  }
-
-  const handleTouchMove = e => {
-    if (!xDown || !yDown) return
-
-    const xUp = e.touches[0].clientX
-    const yUp = e.touches[0].clientY
-
-    const xDiff = xDown - xUp
-    const yDiff = yDown - yUp
-
-    if (Math.abs(xDiff) > Math.abs(yDiff)) {
-      if ( xDiff > 0 ) {
-        console.log('left')
-        moveTetrominoLeft(tetromino)
-      } else {
-        console.log('right')
-        moveTetrominoRight(tetromino)
-      }
-    } else {
-      if ( yDiff < 0 ) {
-        accelerateTetraminoFall()
-      }
+    return () => {
+      cancelAnimationFrame(rafRef.current)
+      document.removeEventListener('keydown', keyboardEventListener)
     }
-    /* reset values */
-    setXDown(null)
-    setYDown(null)
-  }
+  }, [context])
 
 
   return (
@@ -358,9 +363,11 @@ function Tetris() {
               className={s.wrapper}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
           >
             <canvas ref={canvasRef} width="320" height="640" id="game"/>
           </div>
+          {gameOver && <button onClick={() => reset()} className={s.btn}>Retry</button>}
         </div>
       </>
   )
