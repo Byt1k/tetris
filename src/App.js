@@ -10,7 +10,7 @@ const App = () => {
   useEffect(() => {
     tg.ready()
     tg.expand()
-    tg.disableVerticalSwipes()
+    tg.isVerticalSwipesEnabled = false
   }, [])
 
 
