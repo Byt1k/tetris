@@ -4,9 +4,9 @@ html, body {
 }
 
 body {
-    background: black;
+    background: var(--tg-theme-bg-color);
     line-height: normal;
-    color: #fff;
+    color: var(--tg-theme-text-color);
     max-height: 100vh;
     overflow: hidden;
 }

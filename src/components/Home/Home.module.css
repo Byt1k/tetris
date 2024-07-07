@@ -30,12 +30,18 @@ h1 {
     justify-content: center;
     width: 210px;
     height: 50px;
-    background: #fff;
+    background-color: var(--tg-theme-button-color);
     border-radius: 8px;
-    color: #000;
+    color: var(--tg-theme-button-text-color);
     font-weight: bold;
-    margin-top: 70px;
     font-size: 20px;
+    margin-top: 70px;
+}
+
+.close {
+    color: var(--tg-theme-button-text-color);
+    font-size: 15px;
+    margin-top: 20px;
 }
 
 .credits {
