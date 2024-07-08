@@ -11,6 +11,7 @@ const App = () => {
     tg.ready()
     tg.expand()
     tg.disableVerticalSwipes()
+    alert(tg.version)
   }, [])
 
 
