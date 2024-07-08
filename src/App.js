@@ -5,12 +5,15 @@ import Tetris from './components/Tetris/Tetris'
 import Home from './components/Home/Home'
 
 const App = () => {
-  const tg = window.Telegram.WebApp
+  const tg = {
+    ...window.Telegram.WebApp,
+    isVerticalSwipesEnabled: false
+  }
 
   useEffect(() => {
     tg.ready()
     tg.expand()
-    tg.isVerticalSwipesEnabled = false
+    // tg.disableVerticalSwipes()
   }, [])
 
 
