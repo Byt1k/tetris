@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import Tetris from './components/Tetris/Tetris'
 import Home from './components/Home/Home'
 
 const App = () => {
-  const tg = window.Telegram.WebApp
+  const tgRef = useRef(window.Telegram.WebApp)
 
   useEffect(() => {
-    tg.ready()
-    tg.expand()
-    tg.disableVerticalSwipes()
-    tg.isClosingConfirmationEnabled = true
-    alert(tg.version)
+    tgRef.current.ready()
+    tgRef.current.expand()
+    tgRef.current.disableVerticalSwipes()
+    tgRef.current.isClosingConfirmationEnabled = true
+    tgRef.current.isVerticalSwipesEnabled = false
+    alert(tgRef.current.version)
   }, [])
 
 
