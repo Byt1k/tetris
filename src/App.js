@@ -13,9 +13,8 @@ const App = () => {
     tgRef.current.disableVerticalSwipes()
     tgRef.current.isClosingConfirmationEnabled = true
     tgRef.current.isVerticalSwipesEnabled = false
-    alert(tgRef.current.version)
+    alert(`Bot API version: ${tgRef.current.version}`)
   }, [])
-
 
   return (
     <BrowserRouter>

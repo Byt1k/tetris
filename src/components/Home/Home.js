@@ -4,10 +4,10 @@ import s from './Home.module.css'
 import { NavLink } from 'react-router-dom'
 
 const Home = () => {
-  const tg = window.Telegram.WebApp
+  // const tg = window.Telegram.WebApp
 
   const onClone = () => {
-    tg.close()
+    // tg.close()
   }
 
   return (
