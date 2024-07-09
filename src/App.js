@@ -11,6 +11,8 @@ const App = () => {
     tg.ready()
     tg.expand()
     tg.disableVerticalSwipes()
+    tg.isClosingConfirmationEnabled = true
+    alert(tg.version)
   }, [])
 
 
